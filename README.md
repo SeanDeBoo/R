@@ -1,3 +1,5 @@
 # Demo Project
 
-#1 R Shiny Dashboard
+#1 NSW Reff plots using epiestim
+
+Gather data, clean and format then plot simple plots
