@@ -1,6 +1,6 @@
 ---
-title: "R practice"
-author: "sean"
+title: "NSW Case Data with Tidyverse"
+author: "Sean De Boo"
 date: "19/02/2022"
 output: html_document
 ---
@@ -15,16 +15,48 @@ This is an R Markdown document. Markdown is a simple formatting syntax for autho
 
 When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
 
-```{r cars}
-summary(cars)
+```{r include=FALSE}
+
+library(tidyverse)
+
+NSW <- read_csv("https://data.nsw.gov.au/data/dataset/3dc5dc39-40b4-4ee9-8ec6-2d862a916dcf/resource/4b03bc25-ab4b-46c0-bb3e-0c839c9915c5/download/confirmed_cases_table2_age_group_agg.csv")
+
+
+NSW2 <- NSW %>%
+  filter(notification_date > '2022-01-19')
+
+
+NSWP <- NSW2 %>%
+  filter(confirmed_by_pcr == 'Yes') %>%
+  filter(age_group != 'AgeGroup_None')
+
+NSWR <- NSW2 %>%
+  filter(confirmed_by_pcr == 'No') %>%
+  filter(age_group != 'AgeGroup_None')
+
 ```
+
+```{r}
+summary(NSWP)
+```
+
 
 ## Including Plots
 
 You can also embed plots, for example:
 
-```{r pressure, echo=FALSE}
-plot(pressure)
+```{r echo=FALSE}
+theme_update(plot.title = element_text(hjust = 0.5))
+ggplot() +
+  theme(legend.position = "none")+
+  ggtitle('NSW Confirmed cases PCR vs RAT') +
+  xlab('Date') + ylab('Number of Cases') +
+  geom_smooth(data=NSWP, aes(x = notification_date, y = confirmed_cases_count,
+                 colour=age_group)) +
+  geom_smooth(data=NSWR, aes(x = notification_date, y = confirmed_cases_count,
+            colour= "Rapid Test"))+
+  ylim(0,4000)+
+  facet_wrap(~age_group, nrow = 4)
 ```
 
 Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
