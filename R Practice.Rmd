@@ -2,7 +2,7 @@
 title: "NSW Case Data with Tidyverse"
 author: "Sean De Boo"
 date: "19/02/2022"
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
